@@ -56,7 +56,9 @@ class ReporteController extends BaseController
       exit();
 
     } catch (Html2PdfException $e) {
-      $html2pdf->clean();
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
       $formatter = new ExceptionFormatter($e);
       echo $formatter->getMessage();
     }
@@ -80,7 +82,9 @@ class ReporteController extends BaseController
       exit();
 
     } catch (Html2PdfException $e) {
-      $html2pdf->clean();
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
       $formatter = new ExceptionFormatter($e);
       echo $formatter->getMessage();
     }
@@ -104,7 +108,43 @@ class ReporteController extends BaseController
       exit();
 
     } catch (Html2PdfException $e) {
-      $html2pdf->clean();
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
+      $formatter = new ExceptionFormatter($e);
+      echo $formatter->getMessage();
+    }
+  }
+
+  public function getReporte5($id)
+  {
+    $query = "SELECT * FROM view_superhero_powers WHERE id=".$id.";";
+    $rows = $this->db->query($query);
+
+    $super_hero_name = "";
+    $full_name = "";
+    if (count($rows->getResultArray()) > 0) {
+      $super_hero_name = $rows->getResultArray()[0]['superhero_name'];
+      $full_name = $rows->getResultArray()[0]['full_name'];
+    }
+
+    $data = [
+      "rows" => $rows->getResultArray(),
+      "super_hero_name" => $super_hero_name,
+      "full_name" => $full_name,
+    ];
+    $html = view('reportes/reporte5', $data);
+    try {
+      $html2pdf = new Html2Pdf('P', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
+      $html2pdf->writeHTML($html);
+      $this->response->setHeader('Content-Type', 'application/pdf');
+      $html2pdf->Output('Reporte-superhero-powers.pdf');
+      exit();
+
+    } catch (Html2PdfException $e) {
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
       $formatter = new ExceptionFormatter($e);
       echo $formatter->getMessage();
     }

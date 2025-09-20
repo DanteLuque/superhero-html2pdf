@@ -1,68 +1,118 @@
-# CodeIgniter 4 Application Starter
+# 🦸 Superhero – HTML2PDF (CodeIgniter 4)
 
-## What is CodeIgniter?
+Aplicación de ejemplo construida con **PHP 8.1+**, **CodeIgniter 4**, **MySQL** y el paquete **spipu/html2pdf** para generar reportes en PDF a partir de vistas HTML.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## 🔄 Características
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+-   Generación de reportes en PDF desde vistas personalizadas.
+-   Organización de scripts SQL para inicializar la base de datos.
+-   Controladores dedicados a reportes y generadores.
+-   Configuración de Virtual Host para entorno local.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 📅 Requisitos previos
+-   🐘 PHP **8.1 o superior** (con extensiones **intl** y **mbstring** habilitadas).
+-   🛠️ Composer 2.x
+-   🐬 MySQL 5.7+ / MariaDB
+-   📦 Servidor local (XAMPP/Laragon) con vhost apuntando a `public/`.
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## 📚 Instalación
+1.  Clona el repositorio:
+```bash
+git clone https://github.com/DanteLuque/superhero-html2pdf.git
+cd superhero-html2pdf
+```
+2.  Instala dependencias con Composer:
+```bash
+composer install
+```
+3.  Copia el archivo de entorno:
+```bash
+cp .env.example .env
+```
+4. Configura las variables de conexión en `.env`:
+```bash
+database.default.hostname = localhost
+database.default.database = superhero
+database.default.username = root
+database.default.password =
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+```
+5. Crea la base de datos `superhero` e importa los scripts:
+```bash
+app/Database/db_superhero/01_reference_data.sql
+app/Database/db_superhero/02_hero_attribute.sql
+app/Database/db_superhero/03_hero_power.sql
+app/Database/db_superhero/views/superhero_info.sql
+app/Database/db_superhero/views/superhero_powers.sql
+```
+## ⚙️ Configuración del entorno local
 
-## Installation & updates
+1.  Edita tu archivo `hosts` de Windows:
+```bash
+C:\Windows\System32\drivers\etc\hosts
+```
+y agrega:
+```bash
+127.0.0.1   superhero.test
+```
+2. Edita el archivo de Virtual Hosts de Apache:
+```bash
+C:\Program Files\xampp\apache\conf\extra\httpd-vhosts.conf
+```
+y agrega:
+```bash
+<VirtualHost *:80>
+    DocumentRoot "C:/Program Files/xampp/htdocs/superhero-html2pdf/public"
+    ServerName superhero.test
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+    <Directory "C:/Program Files/xampp/htdocs/superhero-html2pdf/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+## 🚀 Ejecución
+Una vez configurado el vhost y la base de datos, reinicia Apache desde el panel de XAMPP y accede a:
+```bash
+http://superhero.test
+```
+## 🧭 Rutas principales
+| Método | Ruta                          | Descripción                                 |
+|--------|-------------------------------|---------------------------------------------|
+| GET    | `/`                           | Página de inicio (Home)                     |
+| GET    | `/reportes/r1`                | Generar reporte PDF #1                      |
+| GET    | `/reportes/r2`                | Generar reporte PDF #2                      |
+| GET    | `/reportes/r3`                | Generar reporte PDF #3                      |
+| POST   | `/reportes/r4`                | Generar reporte PDF #4 (requiere POST)      |
+| GET    | `/generador`                  | Formulario del generador de PDFs            |
+| GET    | `/tarea5`                     | Vista de la tarea 5 (buscador de héroes)    |
+| POST   | `/tarea5/buscador`            | Acción de búsqueda en tarea 5               |
+| GET    | `/tarea5/poderes/(:num)`      | Generar reporte PDF #5 según ID de héroe    |
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
 
-## Setup
+## 📁 Estructura del proyecto
+```bash
+danteluque-superhero-html2pdf/
+├── app/
+│   ├── Controllers/        # Controladores (Generador, Reportes, Home)
+│   ├── Database/
+│   │   └── db_superhero/   # Scripts SQL de base e inserts
+│   │       ├── 01_reference_data.sql
+│   │       ├── 02_hero_attribute.sql
+│   │       └── views/      # Vistas SQL
+│   ├── Routes/             # Definición de rutas
+│   └── Views/              # Vistas HTML y reportes PDF
+├── public/                 # Punto de entrada (index.php, .htaccess)
+├── composer.json           # Dependencias PHP
+└── .env.example            # Configuración de entorno
+```
+## 📝 Contribución
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
-
-## Important Change with index.php
-
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
-
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 8.1 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Si deseas contribuir a este proyecto:
+1.  Haz un fork del repositorio
+2.  Crea una rama (`git checkout -b feature/nueva-funcionalidad`)
+3.  Realiza tus cambios
+4.  Haz commit (`git commit -m 'Añadir nueva funcionalidad'`)
+5.  Sube tus cambios (`git push origin feature/nueva-funcionalidad`)
+6.  Abre un Pull Request

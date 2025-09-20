@@ -1,6 +1,6 @@
 <page backtop="7mm" backbottom="7mm">
  
-   <h1>Listado de poderes del <?= $super_hero_name?> (<?=$full_name?>)</h1>
+   <h1>Poderes de <?= $super_hero_name?> (<?=$full_name?>)</h1>
       <ul style="font-size: 30px;">
         <?php foreach ($rows as $row): ?>
           <li>
@@ -8,5 +8,4 @@
           </li>
         <?php endforeach; ?>
       </ul>
-  
 </page>

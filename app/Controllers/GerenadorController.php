@@ -26,8 +26,10 @@ class GerenadorController extends BaseController
 
   public function tarea5(): string
   {
-    
-    return view('tarea5');
+    $data = [
+      "estilos" => view('reportes/estilos')
+    ];
+    return view('tarea5', $data);
   }
 
   public function buscador(): string

@@ -16,3 +16,5 @@ $routes->get('/reportes/showui', 'ReporteController::showUIReport');
 
 $routes->post('/reportes/show-heroes', 'ReporteController::getResportByPublisher');
 $routes->post('/reportes/show-heroes-and-race-align', 'ReporteController::getResportByRaceAndAlignment');
+
+$routes->get('/dashboard/informe1', 'DashboardController::getInforme1');

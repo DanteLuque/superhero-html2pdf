@@ -11,3 +11,8 @@ $routes->get('/generador', 'GerenadorController::index');
 $routes->get('/tarea5', 'GerenadorController::tarea5');
 $routes->post('/tarea5/buscador', 'GerenadorController::buscador');
 $routes->get('/tarea5/poderes/(:num)', 'ReporteController::getReporte5/$1');
+
+$routes->get('/reportes/showui', 'ReporteController::showUIReport');
+
+$routes->post('/reportes/show-heroes', 'ReporteController::getResportByPublisher');
+$routes->post('/reportes/show-heroes-and-race-align', 'ReporteController::getResportByRaceAndAlignment');

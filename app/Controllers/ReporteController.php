@@ -2,6 +2,10 @@
 
 namespace App\Controllers;
 use App\Controllers\BaseController;
+use App\Models\Alignment;
+use App\Models\Publisher;
+use App\Models\Race;
+use App\Models\Superhero;
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
@@ -10,9 +14,82 @@ class ReporteController extends BaseController
 {
   protected $db;
 
-  public function __construct(){
+  public function __construct()
+  {
     $this->db = \Config\Database::connect();
   }
+
+  public function showUIReport()
+  {
+
+    $publisher = new Publisher();
+    $race = new Race();
+    $alignment = new Alignment();
+
+    $data['publishers'] = $publisher->findAll();
+    $data['razas'] = $race->findAll();
+    $data['alineamientos'] = $alignment->findAll();
+
+    return view("rpt-ui", $data);
+  }
+
+  public function getResportByPublisher()
+  {
+    $superhero = new Superhero();
+    $publisherId = $this->request->getPost('publisher_id');
+
+    $data = [
+      'estilos'=> view('/reportes/estilos'),
+      'superheros'=> $superhero->getSuperHeroByPublisher($publisherId),
+    ];
+
+    $html = view('reportes/rpt-superhero', $data);
+    try {
+      $html2pdf = new Html2Pdf('P', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
+      $html2pdf->writeHTML($html);
+      $this->response->setHeader('Content-Type', 'application/pdf');
+      $html2pdf->Output('Reporte-superhero-powers.pdf');
+      exit();
+
+    } catch (Html2PdfException $e) {
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
+      $formatter = new ExceptionFormatter($e);
+      echo $formatter->getMessage();
+    }
+
+  }
+
+  public function getResportByRaceAndAlignment()
+  {
+    $superhero = new Superhero();
+    $race_id = $this->request->getPost('race_id');
+    $alignment_id = $this->request->getPost('alignment_id');
+
+    $data = [
+      'estilos'=> view('/reportes/estilos'),
+      'superheros'=> $superhero->getSuperHeroByRaceAndAlignment($race_id, $alignment_id),
+    ];
+
+    $html = view('reportes/rpt-superheroRaceAlign', $data);
+    try {
+      $html2pdf = new Html2Pdf('P', 'A4', 'es', true, 'UTF-8', [10, 10, 10, 10]);
+      $html2pdf->writeHTML($html);
+      $this->response->setHeader('Content-Type', 'application/pdf');
+      $html2pdf->Output('Reporte-superhero-powers.pdf');
+      exit();
+
+    } catch (Html2PdfException $e) {
+      if (isset($html2pdf)) {
+        $html2pdf->clean();
+      }
+      $formatter = new ExceptionFormatter($e);
+      echo $formatter->getMessage();
+    }
+
+  }
+
 
   public function getReporte1()
   {
@@ -92,7 +169,7 @@ class ReporteController extends BaseController
   public function getReporte4()
   {
     $publisher = $this->request->getPost('publisher');
-    $query = "SELECT * FROM view_superhero_info WHERE publisher_name='".$publisher."';";
+    $query = "SELECT * FROM view_superhero_info WHERE publisher_name='" . $publisher . "';";
     $rows = $this->db->query($query);
 
     $data = [
@@ -118,7 +195,7 @@ class ReporteController extends BaseController
 
   public function getReporte5($id)
   {
-    $query = "SELECT * FROM view_superhero_powers WHERE id=".$id.";";
+    $query = "SELECT * FROM view_superhero_powers WHERE id=" . $id . ";";
     $rows = $this->db->query($query);
 
     $super_hero_name = "";

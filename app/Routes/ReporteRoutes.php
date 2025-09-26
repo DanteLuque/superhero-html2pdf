@@ -18,3 +18,19 @@ $routes->post('/reportes/show-heroes', 'ReporteController::getResportByPublisher
 $routes->post('/reportes/show-heroes-and-race-align', 'ReporteController::getResportByRaceAndAlignment');
 
 $routes->get('/dashboard/informe1', 'DashboardController::getInforme1');
+$routes->get('/dashboard/informe2', 'DashboardController::getInforme2');
+$routes->get('/dashboard/informe3', 'DashboardController::getInforme3');
+
+$routes->get('/public/api/getdatainforme2', 'DashboardController::getDataInforme2');
+$routes->get('/public/api/getdatainforme3', 'DashboardController::getDataInforme3');
+
+// cache
+$routes->get('/public/api/getdatainforme3cache', 'DashboardController::getDataInforme3Cache');
+
+
+$routes->get('/dashboard/informe4', 'DashboardController::getInforme4');
+$routes->get('/public/api/getdatainforme4gendercache', 'DashboardController::getDataInforme4GenderCache');
+$routes->get('/public/api/getdatainforme4publishercache', 'DashboardController::getDataInforme4PublisherCache');
+
+
+

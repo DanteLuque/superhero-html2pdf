@@ -33,6 +33,11 @@ class ReporteController extends BaseController
     return view("rpt-ui", $data);
   }
 
+  public function getExcel1()
+  {
+    return view("xlsx/demo1");
+  }
+
   public function getResportByPublisher()
   {
     $superhero = new Superhero();

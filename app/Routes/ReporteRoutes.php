@@ -32,5 +32,5 @@ $routes->get('/dashboard/informe4', 'DashboardController::getInforme4');
 $routes->get('/public/api/getdatainforme4gendercache', 'DashboardController::getDataInforme4GenderCache');
 $routes->get('/public/api/getdatainforme4publishercache', 'DashboardController::getDataInforme4PublisherCache');
 
-
+$routes->get('/reportes/excel1', 'ReporteController::getExcel1');
 

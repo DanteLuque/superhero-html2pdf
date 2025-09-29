@@ -89,7 +89,7 @@ class Tarea06Controller extends BaseController
 
         if ($data == null) {
             $promedioPesos = new PromedioPesos();
-            $data = $promedioPesos->findAll();
+            $data = $promedioPesos->orderBy('peso_promedio', 'ASC')->findAll();
             cache()->save($cacheKey, $data, 300);
         }
 
@@ -118,7 +118,7 @@ class Tarea06Controller extends BaseController
             $promedioPesos = new PromedioPesos();
 
             // filtrando los que no son N/A
-            $data = $promedioPesos->findAll();
+            $data = $promedioPesos->orderBy('peso_promedio', 'ASC')->findAll();
             $data = array_filter($data, function ($row) {
                 return $row['publisher_name'] !== 'N/A';
             });

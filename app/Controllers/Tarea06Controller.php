@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Publisher;
 use App\Models\Superhero;
 use App\Models\Views\ConteoHeroesByPublisher;
+use App\Models\Views\PromedioPesos;
 use Spipu\Html2Pdf\Html2Pdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
@@ -77,6 +78,66 @@ class Tarea06Controller extends BaseController
             "success" => true,
             "message" => "Heroes por publisher",
             "resumen" => $data
+        ]);
+    }
+
+    public function ejercicio03()
+    {
+        $this->response->setContentType('application/json');
+        $cacheKey = 'PromedioPesos';
+        $data = cache($cacheKey);
+
+        if ($data == null) {
+            $promedioPesos = new PromedioPesos();
+            $data = $promedioPesos->findAll();
+            cache()->save($cacheKey, $data, 300);
+        }
+
+        if (!$data) {
+            return $this->response->setJSON([
+                "success" => false,
+                "message" => "No se encontraron publishers",
+                "resumen" => []
+            ]);
+        }
+
+        return $this->response->setJSON([
+            "success" => true,
+            "message" => "Peso promedio por publisher",
+            "resumen" => $data
+        ]);
+    }
+
+    public function ejercicio03SinNA()
+    {
+        $this->response->setContentType('application/json');
+        $cacheKey = 'PromedioPesosSinNA';
+        $data = cache($cacheKey);
+
+        if ($data == null) {
+            $promedioPesos = new PromedioPesos();
+
+            // filtrando los que no son N/A
+            $data = $promedioPesos->findAll();
+            $data = array_filter($data, function ($row) {
+                return $row['publisher_name'] !== 'N/A';
+            });
+
+            cache()->save($cacheKey, $data, 300);
+        }
+
+        if (!$data) {
+            return $this->response->setJSON([
+                "success" => false,
+                "message" => "No se encontraron publishers",
+                "resumen" => []
+            ]);
+        }
+
+        return $this->response->setJSON([
+            "success" => true,
+            "message" => "Peso promedio por publisher (sin N/A)",
+            "resumen" => array_values($data) // reindexando el array
         ]);
     }
 }

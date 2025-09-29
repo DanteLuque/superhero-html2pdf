@@ -88,6 +88,23 @@
 
     <div class="container mt-3 bg-light p-4 rounded radius shadow">
         <h4>Ejercicio 3: Grafico del promediado de los pesos de heroes filtrado por publisher, ordenado de mayor a menor </h4>
+
+        <div class="container text-center my-4">
+            <button class="btn btn-outline-primary mb-3" id="obtener-datos2" type="button">Obtener datos</button>
+            <button class="btn btn-outline-primary mb-3" id="obtener-datosSinNA" type="button">Obtener datos sin N/A</button>
+            <span
+                class="text-black bg-warning p-1 rounded">N/A tiene algo de 33 millones, tiene a Godzilla y King Kong, es brutal</span>
+            <span id="aviso2" class="d-none">Por favor espere...</span>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-sm p-3">
+                        <canvas id="lienzo2" style="width:100%; height:500px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -101,10 +118,29 @@
             const lienzo = document.getElementById('lienzo');
             const btnDatos = document.getElementById('obtener-datos');
             const aviso = document.getElementById('aviso');
+            let grafico = null;
+
+            const lienzo2 = document.getElementById('lienzo2');
+            const btnDatos2 = document.getElementById('obtener-datos2');
+            const aviso2 = document.getElementById('aviso2');
+            let grafico2 = null;
+
+            const btnDatosSinNA = document.getElementById('obtener-datosSinNA');
 
             function renderGraphic() {
                 grafico = new Chart(lienzo, {
                     type: 'pie',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: '',
+                            data: [],
+                        }]
+                    }
+                });
+
+                grafico2 = new Chart(lienzo2, {
+                    type: 'bar',
                     data: {
                         labels: [],
                         datasets: [{
@@ -158,6 +194,49 @@
                     console.log(error);
                 }
             });
+
+            async function fetchAndRenderDatos(url) {
+                try {
+                    aviso2.classList.remove("d-none");
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('No se pudo lograr comunicación');
+                    const data = await response.json();
+                    aviso2.classList.add("d-none");
+
+                    if (data.success) {
+                        grafico2.data.labels = data.resumen.map(d => d.publisher_name);
+                        grafico2.data.datasets[0].label = data.message;
+                        grafico2.data.datasets[0].data = data.resumen.map(d => d.peso_promedio);
+
+                        const {
+                            bgColors,
+                            borderColors
+                        } = getRandomColors(data.resumen.length);
+
+                        grafico2.data.datasets[0].backgroundColor = bgColors;
+                        grafico2.data.datasets[0].borderColor = borderColors;
+
+                        grafico2.data.datasets[0].borderWidth = 3;
+                        grafico2.data.datasets[0].barPercentage = .6;
+
+                        grafico2.options = {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        };
+
+                        grafico2.update();
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            btnDatos2.addEventListener("click", () => fetchAndRenderDatos('tarea06/ejercicio03'));
+            btnDatosSinNA.addEventListener("click", () => fetchAndRenderDatos('tarea06/ejercicio03SinNA'));
 
             renderGraphic();
         });

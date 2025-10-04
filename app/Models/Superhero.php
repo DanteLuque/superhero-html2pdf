@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use CodeIgniter\Model;
 
 class Superhero extends Model
@@ -64,5 +65,26 @@ class Superhero extends Model
     $builder->where('SH.alignment_id', $alignmentId);
 
     return $builder->get()->getResultArray();
+  }
+
+  public function getSuperHeroByGender($genders, $limit)
+  {
+    $db = \Config\Database::connect();
+    $builder = $db->table('superhero SH');
+
+    $builder->select('
+            SH.id,
+            SH.superhero_name,
+            SH.full_name,
+            G.gender
+        ');
+    $builder->join('gender G', 'G.id = SH.gender_id', 'left');
+
+    if (!empty($genders)) $builder->whereIn('G.gender', $genders);
+    if ($limit > 0) $builder->limit($limit);
+    
+    $builder->orderBy('SH.superhero_name', 'asc');
+    $query = $builder->get();
+    return $query->getResultArray();
   }
 }

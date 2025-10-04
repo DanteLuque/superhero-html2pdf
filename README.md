@@ -89,6 +89,7 @@ http://superhero.test
 | GET    | `/tarea5`                     | Vista de la tarea 5 (buscador de héroes)    |
 | POST   | `/tarea5/buscador`            | Acción de búsqueda en tarea 5               |
 | GET    | `/tarea5/poderes/(:num)`      | Generar reporte PDF #5 según ID de héroe    |
+| GET    | `/tarea6`                     | Los 3 ejercicios resueltos que se dejaron como actividad|
 
 
 ## 📁 Estructura del proyecto

@@ -8,3 +8,4 @@ use CodeIgniter\Router\RouteCollection;
 
 // rutas por módulos
 require APPPATH . 'Routes/ReporteRoutes.php';
+require APPPATH . 'Routes/Tarea06Routes.php';

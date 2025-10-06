@@ -1,0 +1,40 @@
+.featured-post {
+      background-color: #f8f9fa;
+      padding: 40px;
+      border-radius: 10px;
+    }
+
+    .featured-post img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-weight: bold;
+    }
+
+    .blog-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .blog-header h1 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .blog-header p {
+      font-size: 1.25rem;
+      color: #6c757d;
+    }

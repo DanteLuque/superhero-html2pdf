@@ -12,9 +12,9 @@ CREATE TABLE ci_sessions (
 
 CREATE TABLE usuarios(
 	id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-	UUID            CHAR(36) NULL,
 	nombres         VARCHAR(255) NOT NULL,
 	apellidos       VARCHAR(255) NOT NULL,
+    avatar          TEXT NULL,
 	username        VARCHAR(70) NOT NULL,
 	userpass        VARCHAR(255) NOT NULL,
 	rol             ENUM('ADMIN', 'USER'),

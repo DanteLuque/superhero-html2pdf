@@ -1,26 +1,45 @@
-# 🦸 Superhero – HTML2PDF (CodeIgniter 4)
+# 🧾 Tarea07 – Sistema de Registro y Autenticación (CodeIgniter 4)
 
-Aplicación de ejemplo construida con **PHP 8.1+**, **CodeIgniter 4**, **MySQL** y el paquete **spipu/html2pdf** para generar reportes en PDF a partir de vistas HTML.
+Aplicación de ejemplo construida con **PHP 8.1+**, **CodeIgniter 4**, **MySQL** y autenticación basada en **roles**.  
+Incluye validaciones, carga de archivos (avatar), migraciones y seeders para inicializar los datos.
 
-## 🔄 Características
+---
 
--   Generación de reportes en PDF desde vistas personalizadas.
--   Organización de scripts SQL para inicializar la base de datos.
--   Controladores dedicados a reportes y generadores.
--   Configuración de Virtual Host para entorno local.
+## 📖 Descripción
+
+Este proyecto demuestra un flujo completo de **registro, inicio de sesión y control de acceso por roles**, utilizando las funcionalidades modernas de CodeIgniter 4.  
+Está diseñado como base para sistemas administrativos o paneles de usuario, con gestión de sesiones y subida de imágenes.
+
+---
+
+## 🧩 Tecnologías utilizadas
+
+- 🐘 **PHP 8.1+**
+- ⚙️ **CodeIgniter 4.6.3**
+- 🐬 **MySQL 8+**
+- 🎨 **Bootstrap 5**
+- 🔐 **Password Hashing (BCRYPT)**
+- 📁 **Multer-like File Uploads (nativo de CI4)**
+
+---
 
 ## 📅 Requisitos previos
--   🐘 PHP **8.1 o superior** (con extensiones **intl** y **mbstring** habilitadas).
--   🛠️ Composer 2.x
--   🐬 MySQL 5.7+ / MariaDB
--   📦 Servidor local (XAMPP/Laragon) con vhost apuntando a `public/`.
 
-## 📚 Instalación
-1.  Clona el repositorio:
-```bash
-git clone https://github.com/DanteLuque/superhero-html2pdf.git
-cd superhero-html2pdf
-```
+- PHP **8.1 o superior** con extensiones `intl`, `mbstring` y `mysqli`.
+- **Composer 2.x**
+- Servidor local como **XAMPP** o **Laragon**.
+- MySQL o MariaDB ejecutándose.
+
+---
+
+## ⚙️ Instalación y configuración
+
+1. Clona el repositorio:
+ ```bash
+   git clone https://github.com/DanteLuque/superhero-html2pdf.git
+   cd superhero-html2pdf
+   git checkout --track origin/tarea07
+  ```
 2.  Instala dependencias con Composer:
 ```bash
 composer install
@@ -32,20 +51,21 @@ cp .env.example .env
 4. Configura las variables de conexión en `.env`:
 ```bash
 database.default.hostname = localhost
-database.default.database = superhero
+database.default.database = miapp
 database.default.username = root
 database.default.password =
 database.default.DBDriver = MySQLi
 database.default.port = 3306
 ```
-5. Crea la base de datos `superhero` e importa los scripts:
-```bash
-app/Database/db_superhero/01_reference_data.sql
-app/Database/db_superhero/02_hero_attribute.sql
-app/Database/db_superhero/03_hero_power.sql
-app/Database/db_superhero/views/superhero_info.sql
-app/Database/db_superhero/views/superhero_powers.sql
+5. Ejecuta las migraciones para crear las tablas:
+ ```bash
+ php spark migrate
 ```
+6. (Opcional) Inserta datos de ejemplo con el seeder:
+ ```bash
+php spark db:seed UsuarioSeeder
+```
+
 ## ⚙️ Configuración del entorno local
 
 1.  Edita tu archivo `hosts` de Windows:
@@ -72,42 +92,54 @@ y agrega:
     </Directory>
 </VirtualHost>
 ```
-## 🚀 Ejecución
-Una vez configurado el vhost y la base de datos, reinicia Apache desde el panel de XAMPP y accede a:
-```bash
-http://superhero.test
-```
+
+
 ## 🧭 Rutas principales
-| Método | Ruta                          | Descripción                                 |
-|--------|-------------------------------|---------------------------------------------|
-| GET    | `/`                           | Página de inicio (Home)                     |
-| GET    | `/reportes/r1`                | Generar reporte PDF #1                      |
-| GET    | `/reportes/r2`                | Generar reporte PDF #2                      |
-| GET    | `/reportes/r3`                | Generar reporte PDF #3                      |
-| POST   | `/reportes/r4`                | Generar reporte PDF #4 (requiere POST)      |
-| GET    | `/generador`                  | Formulario del generador de PDFs            |
-| GET    | `/tarea5`                     | Vista de la tarea 5 (buscador de héroes)    |
-| POST   | `/tarea5/buscador`            | Acción de búsqueda en tarea 5               |
-| GET    | `/tarea5/poderes/(:num)`      | Generar reporte PDF #5 según ID de héroe    |
-| GET    | `/tarea6`                     | Los 3 ejercicios resueltos que se dejaron como actividad|
+| Método | Ruta                | Descripción                                      |
+|--------|---------------------|--------------------------------------------------|
+| GET    | `/`                 | Página principal (Home)                          |
+| GET    | `/auth/login`       | Vista de inicio de sesión                        |
+| POST   | `/auth/doLogin`     | Procesa el inicio de sesión                      |
+| GET    | `/auth/register`    | Formulario de registro de usuarios               |
+| POST   | `/usuarios/save_db` | Guarda un nuevo usuario en la base de datos      |
+| GET    | `/auth/logout`      | Cierra la sesión actual                          |
 
 
 ## 📁 Estructura del proyecto
 ```bash
-danteluque-superhero-html2pdf/
+tarea07/
 ├── app/
-│   ├── Controllers/        # Controladores (Generador, Reportes, Home)
+│   ├── Controllers/
+│   │   ├── AuthController.php         # Login, logout, register
+│   │   ├── UsuarioController.php      # Manejo de usuarios
+│   │   └── TestController.php         # Rutas protegidas por rol
+│   ├── Filters/
+│   │   ├── Auth.php
+│   │   ├── AlreadyLoggedInFilter.php
+│   │   └── Role.php
+│   ├── Models/
+│   │   ├── BaseModel.php
+│   │   └── Usuario.php
 │   ├── Database/
-│   │   └── db_superhero/   # Scripts SQL de base e inserts
-│   │       ├── 01_reference_data.sql
-│   │       ├── 02_hero_attribute.sql
-│   │       └── views/      # Vistas SQL
-│   ├── Routes/             # Definición de rutas
-│   └── Views/              # Vistas HTML y reportes PDF
-├── public/                 # Punto de entrada (index.php, .htaccess)
-├── composer.json           # Dependencias PHP
-└── .env.example            # Configuración de entorno
+│   │   ├── Migrations/
+│   │   │   └── CreateUsuariosTable.php
+│   │   └── Seeds/
+│   │       └── UsuarioSeeder.php
+│   ├── Validations/
+│   │   └── UsuarioValidation.php
+│   ├── Views/
+│   │   ├── auth/                     # Login y Register
+│   │   ├── layouts/                  # Layouts base
+│   │   └── common/                   # Mensajes y componentes compartidos
+│   └── Routes/                       # Definición de rutas
+├── public/
+│   └── uploads/                      # Avatares de usuario
+├── writable/
+│   └── logs/
+├── .env.example
+└── composer.json
 ```
+
 ## 📝 Contribución
 
 Si deseas contribuir a este proyecto:
